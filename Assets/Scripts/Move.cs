@@ -24,7 +24,6 @@ public class Move : MonoBehaviour
     private void Update()
     {
         moveVector = playerInput.actions["Move"].ReadValue<Vector2>().normalized;
-        
     }
     
     private void FixedUpdate()

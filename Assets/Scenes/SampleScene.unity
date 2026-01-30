@@ -702,7 +702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9a28e9f34a72e439ba642646d17202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Move
-  speed: 50
+  speed: 500
   JumpSpeed: 10
   DownJumpForce: 40
 --- !u!114 &1874706285
