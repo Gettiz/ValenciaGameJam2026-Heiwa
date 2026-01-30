@@ -1,56 +1,108 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class Move : MonoBehaviour
 {
-    private PlayerInput playerInput;
-    private Rigidbody rb;
-    private Vector3 moveVector;
+    [SerializeField] string moveActionName = "Move";
+    [SerializeField] float speed = 6f;
+    [SerializeField] float jumpSpeed = 8f;
+    [SerializeField] float downGravityBoost = 12f;
+    [SerializeField] Transform cameraTransform;
+    [SerializeField] bool logMoveInput;
+    [SerializeField] bool autoSwitchKeyboardScheme = true;
 
-    private bool abilityAir;
-    [SerializeField] private float speed;
-    [SerializeField] private float JumpSpeed;
-    [SerializeField] private float DownJumpForce;
-    
-    private bool isJumping;
-    void Start()
+    PlayerInput playerInput;
+    InputAction moveAction;
+    Rigidbody rb;
+    Vector2 moveVector;
+    bool isJumping;
+
+    void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
+        if (!cameraTransform && Camera.main)
+            cameraTransform = Camera.main.transform;
+        CacheMoveAction();
     }
 
-    private void Update()
+    void OnEnable()
     {
-        moveVector = playerInput.actions["Move"].ReadValue<Vector2>().normalized;
+        CacheMoveAction();
+        moveAction?.Enable();
+    }
+
+    void OnDisable()
+    {
+        moveAction?.Disable();
+    }
+
+    void CacheMoveAction()
+    {
+        if (!playerInput || playerInput.actions == null) return;
+        moveAction = playerInput.actions.FindAction(moveActionName, false);
+        if (moveAction == null)
+            Debug.LogWarning($"Move: no se encontro la accion '{moveActionName}'.", this);
+    }
+
+    void Update()
+    {
+        if (moveAction == null) return;
+        moveVector = Vector2.ClampMagnitude(moveAction.ReadValue<Vector2>(), 1f);
+        if (logMoveInput)
+            Debug.Log($"Move input {moveVector} | Scheme {playerInput?.currentControlScheme}");
+
+        if (autoSwitchKeyboardScheme && playerInput && playerInput.currentControlScheme != "Keyboard&Mouse")
+        {
+            if (Keyboard.current != null && (Keyboard.current.wKey.isPressed || Keyboard.current.aKey.isPressed ||
+                                             Keyboard.current.sKey.isPressed || Keyboard.current.dKey.isPressed ||
+                                             Keyboard.current.upArrowKey.isPressed || Keyboard.current.downArrowKey.isPressed ||
+                                             Keyboard.current.leftArrowKey.isPressed || Keyboard.current.rightArrowKey.isPressed))
+            {
+                try
+                {
+                    playerInput.SwitchCurrentControlScheme("Keyboard&Mouse", Keyboard.current, Mouse.current);
+                }
+                catch (System.ArgumentException)
+                {
+                    Debug.LogWarning("Move: control scheme 'Keyboard&Mouse' no definido en el asset.", this);
+                }
+            }
+        }
     }
     
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        Vector3 newmove = new Vector3(moveVector.x * speed, 0, 0); 
-        if (isJumping) rb.AddForce(Vector3.down * DownJumpForce);
-        
-        rb.AddForce(newmove * Time.fixedDeltaTime);
+        Vector3 camForward = Vector3.forward;
+        Vector3 camRight = Vector3.right;
+
+        if (cameraTransform)
+        {
+            camForward = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up).normalized;
+            camRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
+        }
+
+        Vector3 desiredHorizontal = (camForward * moveVector.y + camRight * moveVector.x) * speed;
+        Vector3 velocity = rb.linearVelocity;
+        velocity.x = desiredHorizontal.x;
+        velocity.z = desiredHorizontal.z;
+        if (isJumping)
+            velocity += Vector3.down * downGravityBoost * Time.fixedDeltaTime;
+        rb.linearVelocity = velocity;
     }
 
-    // Update is called once per frame
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.performed && !isJumping)
         {
-            
-        }
-        
-        if (context.performed)
-        {
-            rb.AddForce(Vector3.up * JumpSpeed, ForceMode.Impulse);
+            Vector3 velocity = rb.linearVelocity;
+            velocity.y = 0f;
+            rb.linearVelocity = velocity;
+            rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
             isJumping = true;
         }
 
         if (context.canceled)
-        {
             isJumping = false;
-        }
     }
 }
