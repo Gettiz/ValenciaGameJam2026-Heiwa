@@ -53,4 +53,12 @@ public class Move : MonoBehaviour
             isJumping = false;
         }
     }
+    
+    public void Fly(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            
+        }
+    }
 }
