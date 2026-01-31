@@ -34,6 +34,7 @@ public class SpritePosition : MonoBehaviour
         
         if (IsRight)
             transform.rotation = Quaternion.Euler(rotationUp, rotationRight,transform.rotation.z);
+            
         else
             transform.rotation = Quaternion.Euler(rotationUp, rotationLeft, transform.rotation.z);
 
