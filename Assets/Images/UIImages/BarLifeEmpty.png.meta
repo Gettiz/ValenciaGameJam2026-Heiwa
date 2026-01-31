@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b473f9dad06e40244bc3d5802cd6375a
+guid: b679cdcb4ac25014ea4736f43a481f10
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -95,12 +95,34 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: BarLifeEmpty
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 828
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbbecf48a5d6a334385206f77cacf836
+      internalID: 694008381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: ecaaa963e40984b4f932ede546996b6b
     internalID: 0
     vertices: []
     indices: 
@@ -109,7 +131,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BarLifeEmpty: 694008381
+      BarLifeEmpty_0: -592513993
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

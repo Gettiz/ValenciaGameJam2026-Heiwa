@@ -12,7 +12,6 @@ public class PlayerMove : MonoBehaviour
     private float acceleration = 30f;
 
     [SerializeField] private float deceleration = 5f;
-    [SerializeField] private float brake = 30f;
     [SerializeField] private float maxSpeed = 2f;
 
     [Header("Air Control")] [Range(0, 1)] [SerializeField]
@@ -83,41 +82,31 @@ public class PlayerMove : MonoBehaviour
         Vector3 moveOnPlane = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized;
         bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
 
-        float currentAccel;
+        float currentMaxSpeed = isGrounded ? maxSpeed : maxSpeedInAir;
+        float currentAccel = isGrounded ? acceleration : acceleration * airControl;
 
-        if (isGrounded)
-            currentAccel = acceleration;
-        else
-            currentAccel = acceleration * airControl;
-
-        if (isMoveInputActive && isGrounded)
+        if (isMoveInputActive)
         {
-            float alignment = Vector3.Dot(moveOnPlane, rb.linearVelocity.normalized);
-
-            if (alignment >= 0 || rb.linearVelocity.magnitude < 0.1f)
+            float currentSpeedInDir = Vector3.Dot(rb.linearVelocity, moveOnPlane);
+            
+            if (currentSpeedInDir < currentMaxSpeed)
             {
-                Acceleration(currentAccel, maxSpeed, moveOnPlane);
+                float forceMagnitude = currentAccel * rb.mass;
+                ApplyForce(moveOnPlane * forceMagnitude);
             }
-            else
+            
+            if (currentSpeedInDir > currentMaxSpeed)
             {
-                Brake(moveOnPlane, brake);
+                Vector3 vel = rb.linearVelocity;
+                float verticalY = vel.y;
+                vel = Vector3.ClampMagnitude(new Vector3(vel.x, 0, 0), currentMaxSpeed);
+                vel.y = verticalY;
+                rb.linearVelocity = vel;
             }
         }
         else if (isGrounded)
         {
             Deceleration(deceleration);
-        }
-
-        if (!isGrounded && isMoveInputActive)
-        {
-            if (rb.linearVelocity.magnitude >= maxSpeedInAir)
-            {
-                maxGlobalSpeed = maxSpeedInAir;
-            }
-
-            Vector3 finalAirControl = moveOnPlane * (acceleration * airControl);
-            Vector3 accelerationForce = finalAirControl * maxGlobalSpeed;
-            ApplyForce(accelerationForce);
         }
     }
 
@@ -134,14 +123,6 @@ public class PlayerMove : MonoBehaviour
         ApplyForce(accelerationForce);
     }
 
-    private void Brake(Vector3 moveDirection, float brakeSpeed)
-    {
-        maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, 0, brakeSpeed * Time.fixedDeltaTime);
-
-        Vector3 brakeForce = moveDirection * brakeSpeed;
-        ApplyForce(brakeForce);
-    }
-
     private void Deceleration(float decelerationSpeed)
     {
         maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, 0, decelerationSpeed * Time.fixedDeltaTime);
@@ -152,26 +133,36 @@ public class PlayerMove : MonoBehaviour
 
     private void JumpBehavior(bool grounded)
     {
-        if (isJumping && jumpButtonHold && jumpTimer < maxJumpHoldTime)
+        if (isJumping)
         {
-            ApplyForce(Vector3.up * jumpHoldForce);
-            jumpTimer += Time.fixedDeltaTime;
+            if (jumpButtonHold && jumpTimer < maxJumpHoldTime)
+            {
+                Debug.Log("timerjumpexecuting");
+                rb.AddForce(Vector3.up * jumpHoldForce, ForceMode.Acceleration);
+                jumpTimer += Time.fixedDeltaTime;
+            }
+            else
+            {
+                rb.AddForce(Vector3.down * lowJumpMultiplier, ForceMode.Acceleration);
+            }
+            
+            if (grounded && rb.linearVelocity.y <= 0.1f && jumpTimer > 0.1f)
+            {
+                isJumping = false;
+            }
         }
-
-        if (grounded) isJumping = false;
     }
 
     private void FallSpeed(bool grounded)
     {
         if (grounded) return;
-
         if (rb.linearVelocity.y < 0)
         {
-            ApplyForce(Vector3.down * fallMultiplier);
+            rb.AddForce(Vector3.down * fallMultiplier, ForceMode.Acceleration);
         }
         else if (rb.linearVelocity.y > 0 && !jumpButtonHold)
         {
-            ApplyForce(Vector3.down * lowJumpMultiplier);
+            rb.AddForce(Vector3.down * lowJumpMultiplier, ForceMode.Acceleration);
         }
     }
     
@@ -202,6 +193,8 @@ public class PlayerMove : MonoBehaviour
             return true;
         }
 
+        //TODO RESPAWN IF PLAYER HASN'T TOUCH GROUND IN THE LAST FEW SECONDS
+        
         activePlatform = null;
         groundNormal = Vector3.up;
         return false;

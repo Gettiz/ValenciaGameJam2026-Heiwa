@@ -3,7 +3,9 @@ using UnityEngine;
 public class AvoidSoftLock : MonoBehaviour
 {
     public DoorObject[] doors;
+    public float waitTime = 10f;
     private bool playerInside = false;
+    private float softLockTimer = 0f;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -18,6 +20,7 @@ public class AvoidSoftLock : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInside = false;
+            softLockTimer = 0f;
         }
     }
 
@@ -32,18 +35,28 @@ public class AvoidSoftLock : MonoBehaviour
                 if (door.doorIsOpen)
                 {
                     allDoorsAreClosed = false;
-                    break; 
+                    break;
                 }
             }
-            
+
             if (allDoorsAreClosed)
             {
-                foreach (DoorObject door in doors)
+                softLockTimer += Time.deltaTime;
+                
+                if (softLockTimer >= waitTime)
                 {
-                    door.OpenDoor();
+                    foreach (DoorObject door in doors)
+                    {
+                        door.OpenDoor();
+                    }
+
+                    softLockTimer = 0f;
                 }
+            }
+            else
+            {
+                softLockTimer = 0f;
             }
         }
     }
 }
-

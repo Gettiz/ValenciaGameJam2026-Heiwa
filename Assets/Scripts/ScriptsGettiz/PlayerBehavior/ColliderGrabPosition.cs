@@ -18,6 +18,8 @@ public class ColliderGrabPosition : MonoBehaviour
 
     private void Update()
     {
+        //TODO ADD A WAY TO AVOID OBJECTS CLIPPING THOUGH WALLS
+        
         rawInput = playerInput.actions["Move"].ReadValue<Vector2>();
         
         if (rawInput.x > 0.1f)
