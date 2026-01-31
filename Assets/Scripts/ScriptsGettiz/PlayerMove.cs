@@ -1,6 +1,11 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class PlayerMove : MonoBehaviour
 {
     [Header("Horizontal Movement")]
@@ -23,11 +28,13 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float fallMultiplier = 25f;
     [SerializeField] private float lowJumpMultiplier = 15f;
 
+    private InputAction moveAction;
+    private InputAction jumpAction;
     private Rigidbody rb;
     private CapsuleCollider playerCollider;
-    private PlayerInput playerInput;
+    [SerializeField] private PlayerInput playerInput;
 
-    private float rawInput;
+    private float moveInput;
     private float jumpTimer;
     private bool isJumping;
     private bool jumpButtonHold;
@@ -37,11 +44,14 @@ public class PlayerMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerCollider = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
+        
+        moveAction = playerInput.actions["Move"];
+        jumpAction = playerInput.actions["Jump"];
     }
 
     private void Update()
     {
-        rawInput = playerInput.actions["Move"].ReadValue<Vector2>().x;
+        moveInput = moveAction.ReadValue<Vector2>().x;
     }
 
     private void FixedUpdate()
@@ -55,9 +65,9 @@ public class PlayerMove : MonoBehaviour
 
     public void MovementBehavior(bool isGrounded)
     {
-        Vector3 moveDir = new Vector3(rawInput, 0, 0);
+        Vector3 moveDir = new Vector3(moveInput, 0, 0);
         Vector3 moveOnPlane = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized;
-        bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
+        bool isMoveInputActive = Mathf.Abs(moveInput) > 0.05f;
 
         float currentAccel = isGrounded ? acceleration : acceleration * airControl;
 
