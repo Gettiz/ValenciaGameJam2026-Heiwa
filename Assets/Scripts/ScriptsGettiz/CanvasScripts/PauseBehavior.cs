@@ -5,10 +5,11 @@ public class PauseBehavior : MonoBehaviour
 {
     public GameObject canvasHUD;
     public GameObject canvasPaused;
-    private bool isPaused = false;
+    public static bool isPaused { get; private set; } = false;
 
     private void Start()
     {
+        Cursor.visible = isPaused;
         canvasHUD.SetActive(true);
         canvasPaused.SetActive(false);
     }
