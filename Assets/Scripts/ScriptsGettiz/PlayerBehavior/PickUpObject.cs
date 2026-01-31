@@ -40,6 +40,11 @@ public class PickUpObject : MonoBehaviour
                     rb.isKinematic = true;
                 }
 
+                if (grabbedObject.TryGetComponent(out Collider col))
+                {
+                    col.enabled = false;
+                }
+
                 grabbedObject.transform.SetParent(transform);
                 grabbedObject.transform.localPosition = Vector3.zero;
             }
@@ -49,6 +54,11 @@ public class PickUpObject : MonoBehaviour
             if (grabbedObject.TryGetComponent(out Rigidbody rb))
             {
                 rb.isKinematic = false;
+            }
+            
+            if (grabbedObject.TryGetComponent(out Collider col))
+            {
+                col.enabled = true;
             }
 
             grabbedObject.transform.SetParent(null);

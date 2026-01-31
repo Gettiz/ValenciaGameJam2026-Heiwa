@@ -3,22 +3,25 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
+    [Header("InteractableLayer")]
     public LayerMask InteractableObjectLayer;
-    
+    private Transform activePlatform;
+    private Vector3 lastPlatformPos;
+
     [Header("Horizontal Movement")] [SerializeField]
     private float acceleration = 30f;
 
     [SerializeField] private float deceleration = 5f;
-    [SerializeField] private float brake = 20f;
-    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float brake = 30f;
+    [SerializeField] private float maxSpeed = 2f;
 
     [Header("Air Control")] [Range(0, 1)] [SerializeField]
-    private float airControl = 0.2f;
-
+    private float airControl = 0.8f;
+    [SerializeField] private float maxSpeedInAir = 0.7f;
     private float maxGlobalSpeed;
 
     [Header("Jump Settings")] [SerializeField]
-    private float jumpImpulse = 7f;
+    private float jumpImpulse = 8f;
 
     [SerializeField] private float jumpHoldForce = 25f;
     [SerializeField] private float maxJumpHoldTime = 0.25f;
@@ -53,6 +56,18 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate()
     {
         bool grounded = IsPlayerOnGround();
+        
+        if (grounded && activePlatform != null)
+        {
+            Vector3 platformDelta = activePlatform.position - lastPlatformPos;
+
+            if (platformDelta.magnitude > 0)
+            {
+                rb.position += platformDelta;
+            }
+            
+            lastPlatformPos = activePlatform.position;
+        }
 
         MovementBehavior(grounded);
         JumpBehavior(grounded);
@@ -66,7 +81,7 @@ public class PlayerMove : MonoBehaviour
         bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
 
         float currentAccel;
-        
+
         if (isGrounded)
             currentAccel = acceleration;
         else
@@ -92,14 +107,21 @@ public class PlayerMove : MonoBehaviour
 
         if (!isGrounded && isMoveInputActive)
         {
-            ApplyForce(moveOnPlane * (acceleration * airControl));
+            if (rb.linearVelocity.magnitude >= maxSpeedInAir)
+            {
+                maxGlobalSpeed = maxSpeedInAir;
+            }
+
+            Vector3 finalAirControl = moveOnPlane * (acceleration * airControl);
+            Vector3 accelerationForce = finalAirControl * maxGlobalSpeed;
+            ApplyForce(accelerationForce);
         }
     }
 
     private void Acceleration(float accelerationSpeed, float maxGroundSpeed, Vector3 moveDirection)
     {
         maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, maxGroundSpeed, accelerationSpeed * Time.fixedDeltaTime);
-        
+
         if (rb.linearVelocity.magnitude >= maxGlobalSpeed)
         {
             maxGlobalSpeed = maxGroundSpeed;
@@ -149,22 +171,35 @@ public class PlayerMove : MonoBehaviour
             ApplyForce(Vector3.down * lowJumpMultiplier);
         }
     }
+    
+    
 
     public bool IsPlayerOnGround()
     {
         float rayLength = (playerCollider.height * 0.5f) + 0.15f;
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, rayLength))
+        RaycastHit hit;
+        
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength, ~0, QueryTriggerInteraction.Ignore))
         {
             groundNormal = hit.normal;
+            
+            if (((1 << hit.collider.gameObject.layer) & InteractableObjectLayer) != 0)
+            {
+                if (activePlatform != hit.transform)
+                {
+                    activePlatform = hit.transform;
+                    lastPlatformPos = activePlatform.position;
+                }
+            }
+            else
+            {
+                activePlatform = null;
+            }
+
             return true;
         }
 
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit nhit, rayLength, InteractableObjectLayer))
-        {
-            groundNormal = hit.normal;
-            return true;
-        }
-
+        activePlatform = null;
         groundNormal = Vector3.up;
         return false;
     }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1199214077135751127
+--- !u!1 &859581345175796473
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5293992697396488245}
-  - component: {fileID: 645636702013296734}
-  - component: {fileID: 7842549044665322658}
-  - component: {fileID: 5949674649274769534}
-  - component: {fileID: 4721231920658617828}
-  - component: {fileID: 3797405545789367873}
-  m_Layer: 6
-  m_Name: RewindedCube
+  - component: {fileID: 4798533997643360439}
+  - component: {fileID: 2443053468079147096}
+  - component: {fileID: 632458650190536501}
+  - component: {fileID: 74004199166346269}
+  - component: {fileID: 7837784047639809738}
+  m_Layer: 0
+  m_Name: DoorObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5293992697396488245
+--- !u!4 &4798533997643360439
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199214077135751127}
+  m_GameObject: {fileID: 859581345175796473}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6, y: 3, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: 10, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 5.1319, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &645636702013296734
+--- !u!33 &2443053468079147096
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199214077135751127}
+  m_GameObject: {fileID: 859581345175796473}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7842549044665322658
+--- !u!23 &632458650190536501
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199214077135751127}
+  m_GameObject: {fileID: 859581345175796473}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -93,13 +92,13 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5949674649274769534
+--- !u!65 &74004199166346269
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199214077135751127}
+  m_GameObject: {fileID: 859581345175796473}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -114,46 +113,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &4721231920658617828
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199214077135751127}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 1
---- !u!114 &3797405545789367873
+--- !u!114 &7837784047639809738
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199214077135751127}
+  m_GameObject: {fileID: 859581345175796473}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85bdc305b10b2d44f82197984927d664, type: 3}
+  m_Script: {fileID: 11500000, guid: 329471070ff3d62469259fbe430f434a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RewindTime
-  recordDuration: 30
-  isReversing: 0
-  materialDefault: {fileID: 2100000, guid: 2997653abad847b4388842035e388d65, type: 2}
-  materialRewind: {fileID: 2100000, guid: 86b18c063d7e12b4db02e4c61dc3296c, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::DoorObject
+  OpenDistance: 4
+  OpenCloseTimer: 0.5
