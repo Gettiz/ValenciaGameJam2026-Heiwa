@@ -74,10 +74,10 @@ public class EnemyController : MonoBehaviour
             nextAttackTime = Time.time + attackCooldown;
             for (int i = 0; i < hits.Length; i++)
             {
-                Health health = hits[i].GetComponentInParent<Health>();
-                if (health != null)
+                IDamageable damageable = hits[i].GetComponentInParent<IDamageable>();
+                if (damageable != null)
                 {
-                    health.TakeDamage(attackDamage);
+                    damageable.Damage(attackDamage);
                 }
             }
         }

@@ -10,15 +10,17 @@ public class PlayerMove : MonoBehaviour
 {
     [Header("InteractableLayer")]
     public LayerMask InteractableObjectLayer;
+    [Header("Ground Detection")]
+    [SerializeField] private LayerMask groundLayer = ~0;
+    [SerializeField] private bool allowTriggerGround = false;
     private Transform activePlatform;
     private Vector3 lastPlatformPos;
 
     [Header("Horizontal Movement")] [SerializeField]
     private float acceleration = 30f;
-
     [SerializeField] private float deceleration = 5f;
-    [SerializeField] private float brake = 30f;
     [SerializeField] private float maxSpeed = 2f;
+    [SerializeField] private float sprintMultiplier = 1.5f;
 
     [Header("Air Control")] [Range(0, 1)] [SerializeField]
     private float airControl = 0.8f;
@@ -38,11 +40,13 @@ public class PlayerMove : MonoBehaviour
 
     private InputAction moveAction;
     private InputAction jumpAction;
+    private InputAction sprintAction;
     private Rigidbody rb;
     private CapsuleCollider playerCollider;
     [SerializeField] private PlayerInput playerInput;
 
     private float moveInput;
+    private bool sprintHeld;
     private float jumpTimer;
     private bool isJumping;
     private bool jumpButtonHold;
@@ -56,11 +60,16 @@ public class PlayerMove : MonoBehaviour
         
         moveAction = playerInput.actions["Move"];
         jumpAction = playerInput.actions["Jump"];
+        sprintAction = playerInput.actions["Sprint"];
     }
 
     private void Update()
     {
         moveInput = moveAction.ReadValue<Vector2>().x;
+        if (sprintAction != null)
+        {
+            sprintHeld = sprintAction.ReadValue<float>() > 0.1f;
+        }
     }
 
     private void FixedUpdate()
@@ -100,35 +109,34 @@ public class PlayerMove : MonoBehaviour
         else
             currentAccel = acceleration * airControl;
 
-        if (isMoveInputActive && isGrounded)
-        {
-            float alignment = Vector3.Dot(moveOnPlane, rb.linearVelocity.normalized);
+        float baseMaxSpeed = isGrounded ? maxSpeed : maxSpeedInAir;
+        float targetMaxSpeed = sprintHeld ? baseMaxSpeed * sprintMultiplier : baseMaxSpeed;
 
-            if (alignment >= 0 || rb.linearVelocity.magnitude < 0.1f)
+        float desiredSpeed;
+        float accelRate;
+        if (isMoveInputActive)
+        {
+            if (!isGrounded)
             {
-                Acceleration(currentAccel, maxSpeed, moveOnPlane);
+                float currentSpeedAbs = Mathf.Abs(rb.linearVelocity.x);
+                float desiredAbs = Mathf.Max(currentSpeedAbs, targetMaxSpeed);
+                desiredSpeed = Mathf.Sign(moveOnPlane.x) * desiredAbs;
             }
             else
             {
-                Brake(moveOnPlane, brake);
+                desiredSpeed = moveOnPlane.x * targetMaxSpeed;
             }
+            accelRate = currentAccel;
         }
-        else if (isGrounded)
+        else
         {
-            Deceleration(deceleration);
+            desiredSpeed = isGrounded ? 0f : rb.linearVelocity.x;
+            accelRate = isGrounded ? deceleration : 0f;
         }
 
-        if (!isGrounded && isMoveInputActive)
-        {
-            if (rb.linearVelocity.magnitude >= maxSpeedInAir)
-            {
-                maxGlobalSpeed = maxSpeedInAir;
-            }
-
-            Vector3 finalAirControl = moveOnPlane * (acceleration * airControl);
-            Vector3 accelerationForce = finalAirControl * maxGlobalSpeed;
-            ApplyForce(accelerationForce);
-        }
+        Vector3 velocity = rb.linearVelocity;
+        float newX = Mathf.MoveTowards(velocity.x, desiredSpeed, accelRate * Time.fixedDeltaTime);
+        rb.linearVelocity = new Vector3(newX, velocity.y, 0f);
     }
 
     private void Acceleration(float accelerationSpeed, float maxGroundSpeed, Vector3 moveDirection)
@@ -147,6 +155,7 @@ public class PlayerMove : MonoBehaviour
     private void Brake(Vector3 moveDirection, float brakeSpeed)
     {
         maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, 0, brakeSpeed * Time.fixedDeltaTime);
+        Debug.Log("Applying brake force");
 
         Vector3 brakeForce = moveDirection * brakeSpeed;
         ApplyForce(brakeForce);
@@ -164,6 +173,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (isJumping && jumpButtonHold && jumpTimer < maxJumpHoldTime)
         {
+            Debug.Log("Applying jump hold force");
             ApplyForce(Vector3.up * jumpHoldForce);
             jumpTimer += Time.fixedDeltaTime;
         }
@@ -192,7 +202,8 @@ public class PlayerMove : MonoBehaviour
         float rayLength = (playerCollider.height * 0.5f) + 0.15f;
         RaycastHit hit;
         
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength, ~0, QueryTriggerInteraction.Ignore))
+        QueryTriggerInteraction triggerMode = allowTriggerGround ? QueryTriggerInteraction.Collide : QueryTriggerInteraction.Ignore;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength, groundLayer, triggerMode))
         {
             groundNormal = hit.normal;
             

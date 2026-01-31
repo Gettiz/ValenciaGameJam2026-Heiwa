@@ -47,6 +47,15 @@ public class EnemySideScrollerAI : MonoBehaviour
     [SerializeField] private float attackVerticalWindow = 1.2f;
     [SerializeField] private float attackVerticalCenterOffset;
 
+    [Header("Shooting")]
+    [SerializeField] private bool enableShooting = true;
+    [SerializeField] private BulletPool bulletPool;
+    [SerializeField] private Transform shootOrigin;
+    [SerializeField] private float shootRange = 6f;
+    [SerializeField] private float shootCooldown = 0.8f;
+    [SerializeField] private float projectileSpeed = 10f;
+    [SerializeField] private float projectileDamage = 10f;
+
     [Header("Animator (opcional)")]
     [SerializeField] private Animator animator;
     [SerializeField] private string runningBool = "isRunning";
@@ -56,9 +65,11 @@ public class EnemySideScrollerAI : MonoBehaviour
     private bool facingRight;
     private bool chasing;
     private float nextAttackTime;
+    private float nextShootTime;
     private float nextTurnTime;
     private float startZ;
     private float rangeCenterX;
+    private Collider[] ownerColliders;
 
     private void Awake()
     {
@@ -69,6 +80,13 @@ public class EnemySideScrollerAI : MonoBehaviour
         {
             attackOrigin = transform;
         }
+
+        if (shootOrigin == null)
+        {
+            shootOrigin = attackOrigin;
+        }
+
+        ownerColliders = GetComponentsInParent<Collider>();
 
         startZ = transform.position.z;
         rangeCenterX = transform.position.x;
@@ -85,13 +103,14 @@ public class EnemySideScrollerAI : MonoBehaviour
 
         bool inDetectArea = IsTargetInBox(boxWidth, boxHeight, boxDepth);
         bool inLoseArea = IsTargetInBox(boxWidth + loseBoxExpand * 2f, boxHeight + loseBoxExpand * 2f, boxDepth + loseBoxExpand * 2f);
+        bool inPatrolBounds = IsTargetWithinPatrolBounds();
 
         bool verticalOk = !enableVerticalTolerance || Mathf.Abs(target.position.y - transform.position.y) <= verticalTolerance;
-        if (!chasing && inDetectArea && verticalOk)
+        if (!chasing && inDetectArea && verticalOk && inPatrolBounds)
         {
             chasing = true;
         }
-        else if (chasing && (!inLoseArea || !verticalOk))
+        else if (chasing && (!inLoseArea || !verticalOk || !inPatrolBounds))
         {
             chasing = false;
         }
@@ -99,6 +118,7 @@ public class EnemySideScrollerAI : MonoBehaviour
         if (chasing)
         {
             TryAttack();
+            TryShoot();
         }
 
         if (animator != null)
@@ -225,12 +245,38 @@ public class EnemySideScrollerAI : MonoBehaviour
 
         for (int i = 0; i < hits.Length; i++)
         {
-            Health health = hits[i].GetComponentInParent<Health>();
-            if (health != null)
+            IDamageable damageable = hits[i].GetComponentInParent<IDamageable>();
+            if (damageable != null)
             {
-                health.TakeDamage(attackDamage);
+                damageable.Damage(attackDamage);
             }
         }
+    }
+
+    private void TryShoot()
+    {
+        if (!enableShooting || bulletPool == null || shootOrigin == null)
+        {
+            return;
+        }
+
+        if (Time.time < nextShootTime)
+        {
+            return;
+        }
+
+        float distance = Mathf.Abs(target.position.x - shootOrigin.position.x);
+        if (distance > shootRange)
+        {
+            return;
+        }
+
+        nextShootTime = Time.time + shootCooldown;
+        Vector3 direction = (target.position - shootOrigin.position).normalized;
+        Quaternion rotation = direction.sqrMagnitude > 0.0001f
+            ? Quaternion.LookRotation(direction, Vector3.up)
+            : shootOrigin.rotation;
+        bulletPool.Spawn(shootOrigin.position, rotation, direction, projectileSpeed, projectileDamage, ownerColliders);
     }
 
     private void SetVelocity(float velocityX)
@@ -280,6 +326,34 @@ public class EnemySideScrollerAI : MonoBehaviour
         Vector3 half = new Vector3(Mathf.Max(0.1f, width), Mathf.Max(0.1f, height), Mathf.Max(0.1f, depth)) * 0.5f;
         Collider[] hits = Physics.OverlapBox(center, half, Quaternion.identity, playerMask, QueryTriggerInteraction.Ignore);
         return hits.Length > 0;
+    }
+
+    private bool IsTargetWithinPatrolBounds()
+    {
+        if (target == null)
+        {
+            return false;
+        }
+
+        switch (patrolMode)
+        {
+            case PatrolMode.BetweenPoints:
+                if (pointA == null || pointB == null)
+                {
+                    return true;
+                }
+
+                float minX = Mathf.Min(pointA.position.x, pointB.position.x);
+                float maxX = Mathf.Max(pointA.position.x, pointB.position.x);
+                return target.position.x >= minX && target.position.x <= maxX;
+            case PatrolMode.Range:
+                float leftBound = rangeCenterX - rangeLeft;
+                float rightBound = rangeCenterX + rangeRight;
+                return target.position.x >= leftBound && target.position.x <= rightBound;
+            case PatrolMode.None:
+            default:
+                return true;
+        }
     }
 
     public void SetTarget(Transform newTarget)

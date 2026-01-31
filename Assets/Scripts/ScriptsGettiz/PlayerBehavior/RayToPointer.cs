@@ -46,6 +46,11 @@ public class RayToPointer : MonoBehaviour
         }
     }
 
+    public Vector3 GetAimPoint()
+    {
+        return hitSomething ? hitInfo.point : mouseWorldTarget;
+    }
+
     void CalculateRay()
     {
         if (origin == null) return;

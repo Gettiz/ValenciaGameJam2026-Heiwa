@@ -61,17 +61,18 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         bool hitLayer = ((1 << other.gameObject.layer) & damageMask.value) != 0;
-        if(!hitLayer)
+        if (!hitLayer)
         {
             Release();
             return;
         }
-            Health health = other.collider.GetComponentInParent<Health>();
-            if (health != null)
-            {
-                health.TakeDamage(damage);
-            }
-    
+
+        IDamageable damageable = other.collider.GetComponentInParent<IDamageable>();
+        if (damageable != null)
+        {
+            damageable.Damage(damage);
+        }
+
         Release();
     }
 

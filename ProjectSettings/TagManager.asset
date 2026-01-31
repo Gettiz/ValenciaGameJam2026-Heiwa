@@ -12,10 +12,10 @@ TagManager:
   - Water
   - UI
   - BoxInteract
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - PlayerWeapon
+  - Enemy
+  - EnemyWeapon
   - 
   - 
   - 

@@ -84,7 +84,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 120
   m_CollisionDetection: 0
 --- !u!114 &3863329049957462734
 MonoBehaviour:
@@ -101,7 +101,7 @@ MonoBehaviour:
   lifetime: 4
   damageMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 512
 --- !u!33 &6221530029870007999
 MeshFilter:
   m_ObjectHideFlags: 0

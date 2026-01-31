@@ -9,6 +9,8 @@ public class WeaponShooter : MonoBehaviour
     [SerializeField] private BulletPool bulletPool;
     [SerializeField] private Transform aimTarget;
     [SerializeField] private bool useAimTarget;
+    [SerializeField] private RayToPointer pointerAim;
+    [SerializeField] private bool usePointerAim;
     [SerializeField] private bool useMuzzleRotation = true;
 
     [Header("Shooting")]
@@ -78,6 +80,12 @@ public class WeaponShooter : MonoBehaviour
             return (aimTarget.position - muzzle.position).normalized;
         }
 
+        if (usePointerAim && pointerAim != null)
+        {
+            Vector3 aimPoint = pointerAim.GetAimPoint();
+            return (aimPoint - muzzle.position).normalized;
+        }
+
         return muzzle.forward;
     }
 
@@ -110,10 +118,10 @@ public class WeaponShooter : MonoBehaviour
         Collider[] hits = Physics.OverlapSphere(meleeOrigin.position, meleeRange, meleeMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < hits.Length; i++)
         {
-            Health health = hits[i].GetComponentInParent<Health>();
-            if (health != null)
+            IDamageable damageable = hits[i].GetComponentInParent<IDamageable>();
+            if (damageable != null)
             {
-                health.TakeDamage(meleeDamage);
+                damageable.Damage(meleeDamage);
             }
         }
     }

@@ -36,8 +36,22 @@ public class PixelizePass : ScriptableRenderPass
         if (!colorBuffer.IsValid()) return;
 
         // Pixelation Math
-        int pixelHeight = settings.screenHeight;
-        int pixelWidth = Mathf.RoundToInt(pixelHeight * cameraData.camera.aspect);
+        int pixelHeight = Mathf.Max(1, settings.screenHeight);
+        float aspect = cameraData.cameraTargetDescriptor.height > 0
+            ? (float)cameraData.cameraTargetDescriptor.width / cameraData.cameraTargetDescriptor.height
+            : cameraData.camera.aspect;
+        if (aspect <= 0f || float.IsNaN(aspect) || float.IsInfinity(aspect))
+        {
+            aspect = 1f;
+        }
+
+        int maxSize = SystemInfo.maxTextureSize;
+        float maxAspect = (float)maxSize / pixelHeight;
+        aspect = Mathf.Clamp(aspect, 1f / maxSize, maxAspect);
+
+        int pixelWidth = Mathf.RoundToInt(pixelHeight * aspect);
+        pixelWidth = Mathf.Clamp(pixelWidth, 1, maxSize);
+        pixelHeight = Mathf.Clamp(pixelHeight, 1, maxSize);
 
         // Update material
         material.SetVector("_BlockCount", new Vector2(pixelWidth, pixelHeight));
