@@ -3,24 +3,27 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
-    [Header("Horizontal Movement")]
-    [SerializeField] private float acceleration = 30f;
+    [Header("Horizontal Movement")] [SerializeField]
+    private float acceleration = 30f;
+
     [SerializeField] private float deceleration = 5f;
     [SerializeField] private float brake = 20f;
     [SerializeField] private float maxSpeed = 5f;
-    
-    [Header("Air Control")]
-    [Range(0, 1)] [SerializeField] private float airControl = 0.2f;
-    [SerializeField] private float airDeceleration = 2f;
+
+    [Header("Air Control")] [Range(0, 1)] [SerializeField]
+    private float airControl = 0.2f;
+
     private float maxGlobalSpeed;
 
-    [Header("Jump Settings")]
-    [SerializeField] private float jumpImpulse = 7f;
+    [Header("Jump Settings")] [SerializeField]
+    private float jumpImpulse = 7f;
+
     [SerializeField] private float jumpHoldForce = 25f;
     [SerializeField] private float maxJumpHoldTime = 0.25f;
 
-    [Header("Fall Physics")]
-    [SerializeField] private float fallMultiplier = 25f;
+    [Header("Fall Physics")] [SerializeField]
+    private float fallMultiplier = 25f;
+
     [SerializeField] private float lowJumpMultiplier = 15f;
 
     private Rigidbody rb;
@@ -32,6 +35,7 @@ public class PlayerMove : MonoBehaviour
     private bool isJumping;
     private bool jumpButtonHold;
     private Vector3 groundNormal;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -59,12 +63,17 @@ public class PlayerMove : MonoBehaviour
         Vector3 moveOnPlane = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized;
         bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
 
-        float currentAccel = isGrounded ? acceleration : acceleration * airControl;
+        float currentAccel;
+        
+        if (isGrounded)
+            currentAccel = acceleration;
+        else
+            currentAccel = acceleration * airControl;
 
         if (isMoveInputActive && isGrounded)
         {
             float alignment = Vector3.Dot(moveOnPlane, rb.linearVelocity.normalized);
-            
+
             if (alignment >= 0 || rb.linearVelocity.magnitude < 0.1f)
             {
                 Acceleration(currentAccel, maxSpeed, moveOnPlane);
@@ -78,7 +87,7 @@ public class PlayerMove : MonoBehaviour
         {
             Deceleration(deceleration);
         }
-        
+
         if (!isGrounded && isMoveInputActive)
         {
             ApplyForce(moveOnPlane * (acceleration * airControl));
@@ -89,6 +98,11 @@ public class PlayerMove : MonoBehaviour
     {
         maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, maxGroundSpeed, accelerationSpeed * Time.fixedDeltaTime);
         
+        if (rb.linearVelocity.magnitude >= maxGlobalSpeed)
+        {
+            maxGlobalSpeed = maxGroundSpeed;
+        }
+
         Vector3 accelerationForce = moveDirection * maxGlobalSpeed * 5f;
         ApplyForce(accelerationForce);
     }
@@ -96,7 +110,7 @@ public class PlayerMove : MonoBehaviour
     private void Brake(Vector3 moveDirection, float brakeSpeed)
     {
         maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, 0, brakeSpeed * Time.fixedDeltaTime);
-        
+
         Vector3 brakeForce = moveDirection * brakeSpeed;
         ApplyForce(brakeForce);
     }
@@ -104,7 +118,7 @@ public class PlayerMove : MonoBehaviour
     private void Deceleration(float decelerationSpeed)
     {
         maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, 0, decelerationSpeed * Time.fixedDeltaTime);
-        
+
         Vector3 stopForce = new Vector3(-rb.linearVelocity.x * decelerationSpeed, 0, 0);
         ApplyForce(stopForce);
     }
@@ -142,6 +156,7 @@ public class PlayerMove : MonoBehaviour
             groundNormal = hit.normal;
             return true;
         }
+
         groundNormal = Vector3.up;
         return false;
     }
