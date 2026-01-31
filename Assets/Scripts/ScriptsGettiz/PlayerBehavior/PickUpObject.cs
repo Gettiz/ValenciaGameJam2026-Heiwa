@@ -29,11 +29,16 @@ public class PickUpObject : MonoBehaviour
     {
         if (!context.started) return;
 
+        // 1. CLEANUP: Remove any objects from the list that were destroyed/deleted
+        insideTrigger.RemoveAll(item => item == null);
+
         if (grabbedObject == null)
         {
             if (insideTrigger.Count > 0)
             {
                 grabbedObject = insideTrigger[0];
+                
+                if (grabbedObject == null) return;
 
                 if (grabbedObject.TryGetComponent(out Rigidbody rb))
                 {
@@ -51,17 +56,21 @@ public class PickUpObject : MonoBehaviour
         }
         else
         {
-            if (grabbedObject.TryGetComponent(out Rigidbody rb))
+            if (grabbedObject != null)
             {
-                rb.isKinematic = false;
-            }
+                if (grabbedObject.TryGetComponent(out Rigidbody rb))
+                {
+                    rb.isKinematic = false;
+                }
             
-            if (grabbedObject.TryGetComponent(out Collider col))
-            {
-                col.enabled = true;
-            }
+                if (grabbedObject.TryGetComponent(out Collider col))
+                {
+                    col.enabled = true;
+                }
 
-            grabbedObject.transform.SetParent(null);
+                grabbedObject.transform.SetParent(null);
+            }
+        
             grabbedObject = null;
         }
     }

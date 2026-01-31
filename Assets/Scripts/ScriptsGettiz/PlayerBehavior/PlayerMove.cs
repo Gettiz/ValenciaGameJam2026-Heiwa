@@ -1,26 +1,18 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CapsuleCollider))]
 public class PlayerMove : MonoBehaviour
 {
     [Header("InteractableLayer")]
     public LayerMask InteractableObjectLayer;
-    [Header("Ground Detection")]
-    [SerializeField] private LayerMask groundLayer = ~0;
-    [SerializeField] private bool allowTriggerGround = false;
     private Transform activePlatform;
     private Vector3 lastPlatformPos;
 
     [Header("Horizontal Movement")] [SerializeField]
     private float acceleration = 30f;
+
     [SerializeField] private float deceleration = 5f;
     [SerializeField] private float maxSpeed = 2f;
-    [SerializeField] private float sprintMultiplier = 1.5f;
 
     [Header("Air Control")] [Range(0, 1)] [SerializeField]
     private float airControl = 0.8f;
@@ -38,15 +30,11 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] private float lowJumpMultiplier = 15f;
 
-    private InputAction moveAction;
-    private InputAction jumpAction;
-    private InputAction sprintAction;
     private Rigidbody rb;
     private CapsuleCollider playerCollider;
-    [SerializeField] private PlayerInput playerInput;
+    private PlayerInput playerInput;
 
-    private float moveInput;
-    private bool sprintHeld;
+    private float rawInput;
     private float jumpTimer;
     private bool isJumping;
     private bool jumpButtonHold;
@@ -57,19 +45,11 @@ public class PlayerMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerCollider = GetComponent<CapsuleCollider>();
         playerInput = GetComponent<PlayerInput>();
-        
-        moveAction = playerInput.actions["Move"];
-        jumpAction = playerInput.actions["Jump"];
-        sprintAction = playerInput.actions["Sprint"];
     }
 
     private void Update()
     {
-        moveInput = moveAction.ReadValue<Vector2>().x;
-        if (sprintAction != null)
-        {
-            sprintHeld = sprintAction.ReadValue<float>() > 0.1f;
-        }
+        rawInput = playerInput.actions["Move"].ReadValue<Vector2>().x;
     }
 
     private void FixedUpdate()
@@ -98,45 +78,36 @@ public class PlayerMove : MonoBehaviour
 
     public void MovementBehavior(bool isGrounded)
     {
-        Vector3 moveDir = new Vector3(moveInput, 0, 0);
+        Vector3 moveDir = new Vector3(rawInput, 0, 0);
         Vector3 moveOnPlane = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized;
-        bool isMoveInputActive = Mathf.Abs(moveInput) > 0.05f;
+        bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
 
-        float currentAccel;
+        float currentMaxSpeed = isGrounded ? maxSpeed : maxSpeedInAir;
+        float currentAccel = isGrounded ? acceleration : acceleration * airControl;
 
-        if (isGrounded)
-            currentAccel = acceleration;
-        else
-            currentAccel = acceleration * airControl;
-
-        float baseMaxSpeed = isGrounded ? maxSpeed : maxSpeedInAir;
-        float targetMaxSpeed = sprintHeld ? baseMaxSpeed * sprintMultiplier : baseMaxSpeed;
-
-        float desiredSpeed;
-        float accelRate;
         if (isMoveInputActive)
         {
-            if (!isGrounded)
+            float currentSpeedInDir = Vector3.Dot(rb.linearVelocity, moveOnPlane);
+            
+            if (currentSpeedInDir < currentMaxSpeed)
             {
-                float currentSpeedAbs = Mathf.Abs(rb.linearVelocity.x);
-                float desiredAbs = Mathf.Max(currentSpeedAbs, targetMaxSpeed);
-                desiredSpeed = Mathf.Sign(moveOnPlane.x) * desiredAbs;
+                float forceMagnitude = currentAccel * rb.mass;
+                ApplyForce(moveOnPlane * forceMagnitude);
             }
-            else
+            
+            if (currentSpeedInDir > currentMaxSpeed)
             {
-                desiredSpeed = moveOnPlane.x * targetMaxSpeed;
+                Vector3 vel = rb.linearVelocity;
+                float verticalY = vel.y;
+                vel = Vector3.ClampMagnitude(new Vector3(vel.x, 0, 0), currentMaxSpeed);
+                vel.y = verticalY;
+                rb.linearVelocity = vel;
             }
-            accelRate = currentAccel;
         }
-        else
+        else if (isGrounded)
         {
-            desiredSpeed = isGrounded ? 0f : rb.linearVelocity.x;
-            accelRate = isGrounded ? deceleration : 0f;
+            Deceleration(deceleration);
         }
-
-        Vector3 velocity = rb.linearVelocity;
-        float newX = Mathf.MoveTowards(velocity.x, desiredSpeed, accelRate * Time.fixedDeltaTime);
-        rb.linearVelocity = new Vector3(newX, velocity.y, 0f);
     }
 
     private void Acceleration(float accelerationSpeed, float maxGroundSpeed, Vector3 moveDirection)
@@ -152,15 +123,6 @@ public class PlayerMove : MonoBehaviour
         ApplyForce(accelerationForce);
     }
 
-    private void Brake(Vector3 moveDirection, float brakeSpeed)
-    {
-        maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, 0, brakeSpeed * Time.fixedDeltaTime);
-        Debug.Log("Applying brake force");
-
-        Vector3 brakeForce = moveDirection * brakeSpeed;
-        ApplyForce(brakeForce);
-    }
-
     private void Deceleration(float decelerationSpeed)
     {
         maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, 0, decelerationSpeed * Time.fixedDeltaTime);
@@ -171,27 +133,36 @@ public class PlayerMove : MonoBehaviour
 
     private void JumpBehavior(bool grounded)
     {
-        if (isJumping && jumpButtonHold && jumpTimer < maxJumpHoldTime)
+        if (isJumping)
         {
-            Debug.Log("Applying jump hold force");
-            ApplyForce(Vector3.up * jumpHoldForce);
-            jumpTimer += Time.fixedDeltaTime;
+            if (jumpButtonHold && jumpTimer < maxJumpHoldTime)
+            {
+                Debug.Log("timerjumpexecuting");
+                rb.AddForce(Vector3.up * jumpHoldForce, ForceMode.Acceleration);
+                jumpTimer += Time.fixedDeltaTime;
+            }
+            else
+            {
+                rb.AddForce(Vector3.down * lowJumpMultiplier, ForceMode.Acceleration);
+            }
+            
+            if (grounded && rb.linearVelocity.y <= 0.1f && jumpTimer > 0.1f)
+            {
+                isJumping = false;
+            }
         }
-
-        if (grounded) isJumping = false;
     }
 
     private void FallSpeed(bool grounded)
     {
         if (grounded) return;
-
         if (rb.linearVelocity.y < 0)
         {
-            ApplyForce(Vector3.down * fallMultiplier);
+            rb.AddForce(Vector3.down * fallMultiplier, ForceMode.Acceleration);
         }
         else if (rb.linearVelocity.y > 0 && !jumpButtonHold)
         {
-            ApplyForce(Vector3.down * lowJumpMultiplier);
+            rb.AddForce(Vector3.down * lowJumpMultiplier, ForceMode.Acceleration);
         }
     }
     
@@ -202,8 +173,7 @@ public class PlayerMove : MonoBehaviour
         float rayLength = (playerCollider.height * 0.5f) + 0.15f;
         RaycastHit hit;
         
-        QueryTriggerInteraction triggerMode = allowTriggerGround ? QueryTriggerInteraction.Collide : QueryTriggerInteraction.Ignore;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength, groundLayer, triggerMode))
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength, ~0, QueryTriggerInteraction.Ignore))
         {
             groundNormal = hit.normal;
             
@@ -223,6 +193,8 @@ public class PlayerMove : MonoBehaviour
             return true;
         }
 
+        //TODO RESPAWN IF PLAYER HASN'T TOUCH GROUND IN THE LAST FEW SECONDS
+        
         activePlatform = null;
         groundNormal = Vector3.up;
         return false;
