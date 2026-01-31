@@ -6,7 +6,10 @@ public class WeaponShooter : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform muzzle;
-    [SerializeField] private Bullet bulletPrefab;
+    [SerializeField] private BulletPool bulletPool;
+    [SerializeField] private Transform aimTarget;
+    [SerializeField] private bool useAimTarget;
+    [SerializeField] private bool useMuzzleRotation = true;
 
     [Header("Shooting")]
     [SerializeField] private float bulletSpeed = 25f;
@@ -23,12 +26,16 @@ public class WeaponShooter : MonoBehaviour
     private InputAction fireAction;
     private InputAction attackAction;
     private float nextFireTime;
+    private Collider[] ownerColliders;
+    private Vector3 customAimDirection;
+    private bool hasCustomAimDirection;
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
         fireAction = playerInput.actions["Fire"];
         attackAction = playerInput.actions["Attack"];
+        ownerColliders = GetComponentsInParent<Collider>();
     }
 
     private void Update()
@@ -46,15 +53,51 @@ public class WeaponShooter : MonoBehaviour
 
     private void Shoot()
     {
-        if (Time.time < nextFireTime || bulletPrefab == null || muzzle == null)
+        if (Time.time < nextFireTime || bulletPool == null || muzzle == null)
         {
             return;
         }
 
         nextFireTime = Time.time + fireCooldown;
+        Vector3 direction = GetShootDirection();
+        Quaternion rotation = useMuzzleRotation
+            ? muzzle.rotation
+            : (direction.sqrMagnitude > 0.0001f ? Quaternion.LookRotation(direction, Vector3.up) : muzzle.rotation);
+        bulletPool.Spawn(muzzle.position, rotation, direction, bulletSpeed, bulletDamage, ownerColliders);
+    }
 
-        Bullet bullet = Instantiate(bulletPrefab, muzzle.position, muzzle.rotation);
-        bullet.Init(bulletSpeed, bulletDamage);
+    private Vector3 GetShootDirection()
+    {
+        if (hasCustomAimDirection && customAimDirection.sqrMagnitude > 0.0001f)
+        {
+            return customAimDirection.normalized;
+        }
+
+        if (useAimTarget && aimTarget != null)
+        {
+            return (aimTarget.position - muzzle.position).normalized;
+        }
+
+        return muzzle.forward;
+    }
+
+    public void FireInDirection(Vector3 direction)
+    {
+        if (direction.sqrMagnitude < 0.0001f)
+        {
+            return;
+        }
+
+        customAimDirection = direction.normalized;
+        hasCustomAimDirection = true;
+        Shoot();
+        hasCustomAimDirection = false;
+    }
+
+    public void SetAimTarget(Transform target)
+    {
+        aimTarget = target;
+        useAimTarget = target != null;
     }
 
     private void MeleeAttack()

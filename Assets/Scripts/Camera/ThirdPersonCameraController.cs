@@ -28,7 +28,7 @@ public class ThirdPersonCameraController : MonoBehaviour
     {
         if (playerInput == null)
         {
-            playerInput = FindObjectOfType<PlayerInput>();
+            playerInput = FindFirstObjectByType<PlayerInput>();
         }
 
         if (playerInput != null)
