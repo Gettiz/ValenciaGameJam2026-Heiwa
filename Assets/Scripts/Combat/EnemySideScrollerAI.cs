@@ -194,7 +194,8 @@ public class EnemySideScrollerAI : MonoBehaviour
         float dirX = Mathf.Sign(targetPoint.position.x - transform.position.x);
         SetVelocity(dirX * speed);
 
-        if (Mathf.Abs(transform.position.x - targetPoint.position.x) <= 0.05f)
+        if ((facingRight && transform.position.x >= targetPoint.position.x) ||
+            (!facingRight && transform.position.x <= targetPoint.position.x))
         {
             ScheduleTurn();
         }

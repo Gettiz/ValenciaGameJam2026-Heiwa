@@ -11,15 +11,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float stopDistance = 1.2f;
     [SerializeField] private float rotationSpeed = 10f;
 
-    [Header("Attack")]
-    [SerializeField] private Transform attackOrigin;
-    [SerializeField] private float attackRange = 1.2f;
-    [SerializeField] private float attackDamage = 10f;
-    [SerializeField] private float attackCooldown = 1f;
-    [SerializeField] private LayerMask playerMask;
-
     private Rigidbody rb;
-    private float nextAttackTime;
 
     private void Awake()
     {
@@ -27,10 +19,6 @@ public class EnemyController : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
-        if (attackOrigin == null)
-        {
-            attackOrigin = transform;
-        }
     }
 
     private void FixedUpdate()
@@ -55,43 +43,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (target == null)
-        {
-            return;
-        }
-
-        if (Time.time < nextAttackTime)
-        {
-            return;
-        }
-
-        Vector3 origin = attackOrigin != null ? attackOrigin.position : transform.position;
-        Collider[] hits = Physics.OverlapSphere(origin, attackRange, playerMask, QueryTriggerInteraction.Ignore);
-        if (hits.Length > 0)
-        {
-            nextAttackTime = Time.time + attackCooldown;
-            for (int i = 0; i < hits.Length; i++)
-            {
-                IDamageable damageable = hits[i].GetComponentInParent<IDamageable>();
-                if (damageable != null)
-                {
-                    damageable.Damage(attackDamage);
-                }
-            }
-        }
-    }
 
     public void SetTarget(Transform newTarget)
     {
         target = newTarget;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Vector3 origin = attackOrigin != null ? attackOrigin.position : transform.position;
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(origin, attackRange);
-    }
+    
 }
