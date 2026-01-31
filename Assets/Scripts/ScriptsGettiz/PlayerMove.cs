@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
+    public LayerMask InteractableObjectLayer;
+    
     [Header("Horizontal Movement")] [SerializeField]
     private float acceleration = 30f;
 
@@ -152,6 +154,12 @@ public class PlayerMove : MonoBehaviour
     {
         float rayLength = (playerCollider.height * 0.5f) + 0.15f;
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, rayLength))
+        {
+            groundNormal = hit.normal;
+            return true;
+        }
+
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit nhit, rayLength, InteractableObjectLayer))
         {
             groundNormal = hit.normal;
             return true;
