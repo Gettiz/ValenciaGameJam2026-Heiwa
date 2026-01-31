@@ -65,23 +65,26 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        bool grounded = IsPlayerOnGround();
-        
-        if (grounded && activePlatform != null)
+        if (!PauseBehavior.isPaused)
         {
-            Vector3 platformDelta = activePlatform.position - lastPlatformPos;
-
-            if (platformDelta.magnitude > 0)
+            bool grounded = IsPlayerOnGround();
+        
+            if (grounded && activePlatform != null)
             {
-                rb.position += platformDelta;
-            }
-            
-            lastPlatformPos = activePlatform.position;
-        }
+                Vector3 platformDelta = activePlatform.position - lastPlatformPos;
 
-        MovementBehavior(grounded);
-        JumpBehavior(grounded);
-        FallSpeed(grounded);
+                if (platformDelta.magnitude > 0)
+                {
+                    rb.position += platformDelta;
+                }
+            
+                lastPlatformPos = activePlatform.position;
+            }
+
+            MovementBehavior(grounded);
+            JumpBehavior(grounded);
+            FallSpeed(grounded);
+        }
     }
 
     public void MovementBehavior(bool isGrounded)
@@ -221,19 +224,22 @@ public class PlayerMove : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started && IsPlayerOnGround())
+        if (!PauseBehavior.isPaused)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, 0);
-            rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
+            if (context.started && IsPlayerOnGround())
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, 0);
+                rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
 
-            isJumping = true;
-            jumpTimer = 0;
-            jumpButtonHold = true;
-        }
+                isJumping = true;
+                jumpTimer = 0;
+                jumpButtonHold = true;
+            }
 
-        if (context.canceled)
-        {
-            jumpButtonHold = false;
+            if (context.canceled)
+            {
+                jumpButtonHold = false;
+            }
         }
     }
 }

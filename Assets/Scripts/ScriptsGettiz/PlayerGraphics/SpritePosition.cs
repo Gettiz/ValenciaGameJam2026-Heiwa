@@ -20,24 +20,23 @@ public class SpritePosition : MonoBehaviour
 
     private void Update()
     {
-        rawInput = playerInput.actions["Move"].ReadValue<Vector2>();
-        
-        if (rawInput.x > 0.1f)
+        if (!PauseBehavior.isPaused)
         {
-            IsRight = true;
+            rawInput = playerInput.actions["Move"].ReadValue<Vector2>();
+        
+            if (rawInput.x > 0.1f)
+            {
+                IsRight = true;
+            }
+            else if (rawInput.x < -0.1f)
+            {
+                IsRight = false;
+            }
+        
+            if (IsRight)
+                transform.rotation = Quaternion.Euler(rotationUp, rotationRight,transform.rotation.z);
+            else
+                transform.rotation = Quaternion.Euler(rotationUp, rotationLeft, transform.rotation.z);
         }
-        else if (rawInput.x < -0.1f)
-        {
-            IsRight = false;
-        }
-        
-        
-        if (IsRight)
-            transform.rotation = Quaternion.Euler(rotationUp, rotationRight,transform.rotation.z);
-            
-        else
-            transform.rotation = Quaternion.Euler(rotationUp, rotationLeft, transform.rotation.z);
-
-        
     }
 }

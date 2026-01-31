@@ -4,52 +4,52 @@ using UnityEngine.InputSystem;
 
 public class RayToPointer : MonoBehaviour
 {
-    [Header("Input")]
-    private PlayerInput playerInput;
+    [Header("Input")] private PlayerInput playerInput;
 
-    [Header("Settings")]
-    public Transform origin;
-    public float maxDistance = 50f; 
+    [Header("Settings")] public Transform origin;
+    public float maxDistance = 50f;
     public LayerMask interactableLayer;
 
-    [Header("Visuals")]
-    public LineRenderer lineRenderer;
+    [Header("Visuals")] public LineRenderer lineRenderer;
 
     private Vector3 mouseWorldTarget;
     private RaycastHit hitInfo;
     private bool hitSomething;
-    
+
     private RewindTime currentRewindTarget;
 
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        
+
         if (lineRenderer == null)
             lineRenderer = GetComponent<LineRenderer>();
-        
+
         lineRenderer.enabled = false;
         lineRenderer.positionCount = 2;
     }
 
     void Update()
     {
-        Vector2 mousePos = playerInput.actions["MousePosition"].ReadValue<Vector2>();
-        
-        float depth = Mathf.Abs(Camera.main.transform.position.z);
-        Vector3 screenPosWithDepth = new Vector3(mousePos.x, mousePos.y, depth);
-        
-        mouseWorldTarget = Camera.main.ScreenToWorldPoint(screenPosWithDepth);
-        mouseWorldTarget.z = 0;
-        
-        CalculateRay();
-        UpdateLineRenderer();
+        if (!PauseBehavior.isPaused)
+        {
+            Vector2 mousePos = playerInput.actions["MousePosition"].ReadValue<Vector2>();
+
+            float depth = Mathf.Abs(Camera.main.transform.position.z);
+            Vector3 screenPosWithDepth = new Vector3(mousePos.x, mousePos.y, depth);
+
+            mouseWorldTarget = Camera.main.ScreenToWorldPoint(screenPosWithDepth);
+            mouseWorldTarget.z = 0;
+
+            CalculateRay();
+            UpdateLineRenderer();
+        }
     }
 
     void CalculateRay()
     {
         if (origin == null) return;
-        
+
         Vector3 direction = (mouseWorldTarget - origin.position).normalized;
 
         if (Physics.Raycast(origin.position, direction, out hitInfo, maxDistance, interactableLayer))
@@ -67,7 +67,7 @@ public class RayToPointer : MonoBehaviour
         if (hitSomething)
         {
             lineRenderer.enabled = true;
-            
+
             lineRenderer.SetPosition(0, origin.position);
             lineRenderer.SetPosition(1, hitInfo.point);
         }
@@ -76,7 +76,7 @@ public class RayToPointer : MonoBehaviour
             lineRenderer.enabled = false;
         }
     }
-    
+
     public void InputRewindToggle(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -104,10 +104,10 @@ public class RayToPointer : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (origin == null) return;
-        
+
         Gizmos.color = Color.white;
         Gizmos.DrawLine(origin.position, mouseWorldTarget);
-        
+
         if (Application.isPlaying && hitSomething)
         {
             Gizmos.color = Color.red;
@@ -116,4 +116,3 @@ public class RayToPointer : MonoBehaviour
         }
     }
 }
-
