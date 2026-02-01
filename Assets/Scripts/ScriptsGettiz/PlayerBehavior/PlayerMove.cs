@@ -171,29 +171,45 @@ public class PlayerMove : MonoBehaviour
     public bool IsPlayerOnGround()
     {
         float rayLength = (playerCollider.height * 0.5f) + 0.15f;
-        RaycastHit hit;
+        float sideOffset = playerCollider.radius * 0.9f;
         
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, rayLength, ~0, QueryTriggerInteraction.Ignore))
-        {
-            groundNormal = hit.normal;
-            
-            if (((1 << hit.collider.gameObject.layer) & InteractableObjectLayer) != 0)
-            {
-                if (activePlatform != hit.transform)
-                {
-                    activePlatform = hit.transform;
-                    lastPlatformPos = activePlatform.position;
-                }
-            }
-            else
-            {
-                activePlatform = null;
-            }
+        Vector3[] rayPositions = new Vector3[3];
+        rayPositions[0] = transform.position;
+        rayPositions[1] = transform.position + Vector3.left * sideOffset;
+        rayPositions[2] = transform.position + Vector3.right * sideOffset;
 
-            return true;
+        RaycastHit hit;
+        bool grounded = false;
+
+        foreach (Vector3 pos in rayPositions)
+        {
+            Debug.DrawRay(pos, Vector3.down * rayLength, Color.red);
+
+            if (Physics.Raycast(pos, Vector3.down, out hit, rayLength, ~0, QueryTriggerInteraction.Ignore))
+            {
+                groundNormal = hit.normal;
+                if (((1 << hit.collider.gameObject.layer) & InteractableObjectLayer) != 0)
+                {
+                    if (activePlatform != hit.transform)
+                    {
+                        activePlatform = hit.transform;
+                        lastPlatformPos = activePlatform.position;
+                    }
+                }
+                else
+                {
+                    activePlatform = null;
+                }
+
+                grounded = true;
+                break;
+            }
         }
 
-        //TODO RESPAWN IF PLAYER HASN'T TOUCH GROUND IN THE LAST FEW SECONDS
+        if (grounded)
+        {
+            return true;
+        }
         
         activePlatform = null;
         groundNormal = Vector3.up;

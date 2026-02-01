@@ -77,11 +77,6 @@ public class RayToPointer : MonoBehaviour
         }
     }
 
-    public Vector3 GetAimPoint()
-    {
-        return hitSomething ? hitInfo.point : mouseWorldTarget;
-    }
-
     public void InputRewindToggle(InputAction.CallbackContext context)
     {
         if (context.started)
