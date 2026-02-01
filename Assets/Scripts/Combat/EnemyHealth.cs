@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public class HealthBar : MonoBehaviour, IDamageable
+public class EnemyHealth : MonoBehaviour, IDamageable
 {
     public float maxHealth = 100;
     public float currentHealth = 1;

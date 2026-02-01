@@ -23,6 +23,9 @@ public class EnemySideScrollerAI : MonoBehaviour
     [SerializeField] private PatrolMode patrolMode = PatrolMode.BetweenPoints;
     [SerializeField] private Transform pointA;
     [SerializeField] private Transform pointB;
+    [SerializeField] private Collider pointACollider;
+    [SerializeField] private Collider pointBCollider;
+    [SerializeField] private float pointContactDistance = 0.1f;
     [SerializeField] private float rangeLeft = 2f;
     [SerializeField] private float rangeRight = 2f;
     [SerializeField] private float waitAtTurn = 0.2f;
@@ -194,11 +197,34 @@ public class EnemySideScrollerAI : MonoBehaviour
         float dirX = Mathf.Sign(targetPoint.position.x - transform.position.x);
         SetVelocity(dirX * speed);
 
-        if ((facingRight && transform.position.x >= targetPoint.position.x) ||
+        if (IsTouchingPoint(targetPoint) ||
+            (facingRight && transform.position.x >= targetPoint.position.x) ||
             (!facingRight && transform.position.x <= targetPoint.position.x))
         {
             ScheduleTurn();
         }
+    }
+
+    private bool IsTouchingPoint(Transform targetPoint)
+    {
+        Collider pointCollider = null;
+        if (targetPoint == pointA)
+        {
+            pointCollider = pointACollider != null ? pointACollider : pointA.GetComponent<Collider>();
+        }
+        else if (targetPoint == pointB)
+        {
+            pointCollider = pointBCollider != null ? pointBCollider : pointB.GetComponent<Collider>();
+        }
+
+        if (pointCollider == null)
+        {
+            return false;
+        }
+
+        Vector3 closest = pointCollider.ClosestPoint(transform.position);
+        float distance = Vector3.Distance(closest, transform.position);
+        return distance <= pointContactDistance;
     }
 
     private void PatrolRange()
@@ -377,5 +403,12 @@ public class EnemySideScrollerAI : MonoBehaviour
         Vector3 origin = attackOrigin != null ? attackOrigin.position : transform.position;
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(origin, attackRange);
+
+        if (enableShooting)
+        {
+            Vector3 shootPos = shootOrigin != null ? shootOrigin.position : transform.position;
+            Gizmos.color = new Color(0f, 0.75f, 1f, 0.9f);
+            Gizmos.DrawWireSphere(shootPos, shootRange);
+        }
     }
 }

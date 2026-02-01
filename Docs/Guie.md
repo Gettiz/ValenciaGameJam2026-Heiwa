@@ -102,3 +102,47 @@ Archivo: [Assets/Scripts/Audio/AudioZone.cs](Assets/Scripts/Audio/AudioZone.cs)
 - Asigna `zoneMusic` y `loop`.
 - Al entrar, cambia la música con el AudioManager.
 
+---
+
+## 7) Botón de idioma (solo panel)
+**Objetivo:** mostrar un panel de selección de idioma sin implementar la traducción todavía.
+
+**Pasos rápidos:**
+- Crea un panel `LanguagePanel` y déjalo desactivado.
+- En el botón “Idioma”, agrega OnClick → `SetActive(true)` al panel.
+- Para cerrar: botón “Volver” → `SetActive(false)`.
+
+Si prefieres usar un switcher, añade `UIPanelSwitcher` y llama `ShowPanel(LanguagePanel)`.
+
+---
+
+## 8) Enemigo solo disparo (rango y gizmos)
+Archivo: [Assets/Scripts/Combat/EnemySideScrollerAI.cs](Assets/Scripts/Combat/EnemySideScrollerAI.cs)
+
+**Solo disparo (sin melee):**
+- No asignes `attackOrigin`/`attackMask` o pon `attackRange = 0`.
+- Activa `Enable Shooting`.
+- Asigna `BulletPool` y `Shoot Origin`.
+
+**Rango de disparo:**
+- `shootRange` define la distancia horizontal en la que empieza a disparar.
+- `shootCooldown` controla la cadencia.
+
+**Gizmo de rango:**
+- Al seleccionar el enemigo verás un círculo azul en el `shootRange`.
+
+---
+
+## 9) Curación con objetos (Health Pickup)
+Archivos:
+- [Assets/Scripts/ScriptsGettiz/CharacterHealth/HealthPlayer.cs](Assets/Scripts/ScriptsGettiz/CharacterHealth/HealthPlayer.cs)
+- [Assets/Scripts/ScriptsGettiz/CharacterHealth/HealthPickup.cs](Assets/Scripts/ScriptsGettiz/CharacterHealth/HealthPickup.cs)
+
+**Cómo usar:**
+- Crea un prefab del objeto de curación.
+- Añade un Collider y marca `Is Trigger`.
+- Añade el script `HealthPickup`.
+- Ajusta `healAmount` (y opcional `pickupSfx`).
+
+**Resultado:** al tocarlo, el jugador se cura y el objeto se destruye.
+
