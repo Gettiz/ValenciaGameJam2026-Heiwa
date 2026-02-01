@@ -229,9 +229,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TextMeshProLanguages
   translationsLabel:
   - language: 1
-    translatedLabelText: Spanish Spanish Spanish Spanish Spanish
+    translatedLabelText: "Controles \nAWSD > Moverse  \nESPACIO > Saltar\nE > Recoger
+      y Soltar\nR > Rebobinas Objetos\nP > Pause"
   - language: 0
-    translatedLabelText: English English English English English
+    translatedLabelText: 'Controls
+
+      AWSD > Move
+
+      SPACE > Jump
+
+      E
+      > Pick Up and Drop
+
+      R > Rewind Objects
+
+      P > Pause'
 --- !u!1 &8651994899818525452
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,6 +258,7 @@ GameObject:
   - component: {fileID: 6278038592152882276}
   - component: {fileID: 4760991769575894220}
   - component: {fileID: 8304703941311289948}
+  - component: {fileID: 7106242243654332452}
   m_Layer: 0
   m_Name: NPC Bubble Text
   m_TagString: Untagged
@@ -260,7 +273,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8651994899818525452}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
   m_ConstrainProportionsScale: 1
@@ -367,5 +380,19 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 795.1, y: 681.03, z: 337.33}
+  m_Size: {x: 11071, y: 5115, z: 337.33}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7106242243654332452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8651994899818525452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e9ed9b109daf814aa77fee2073f6b1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleTextNextToPlayer
+  targetCanvasGroup: {fileID: 4760991769575894220}
+  maxDistance: 15
