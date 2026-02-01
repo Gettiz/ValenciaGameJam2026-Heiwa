@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 746651022189714548}
   - component: {fileID: 6423811353802686989}
   - component: {fileID: 6353754752596073029}
-  - component: {fileID: 6633819539795491228}
   m_Layer: 0
   m_Name: CameraTarget (1)
   m_TagString: Untagged
@@ -132,14 +131,6 @@ MonoBehaviour:
   turnSmoothTime: 0.05
   steadySmoothTime: 0.02
   centerDelayTimer: 2.5
---- !u!81 &6633819539795491228
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4365228585050808666}
-  m_Enabled: 1
 --- !u!1 &6008731591693784538
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,114 +217,6 @@ MonoBehaviour:
   grabLayer:
     serializedVersion: 2
     m_Bits: 64
---- !u!1 &7835676404755624233
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4734677327996312551}
-  - component: {fileID: 5097975736192684844}
-  - component: {fileID: 1990058924691321723}
-  - component: {fileID: 7203812611154305031}
-  m_Layer: 7
-  m_Name: CharacterPlane
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4734677327996312551
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7835676404755624233}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: 0.08, z: -0.2}
-  m_LocalScale: {x: 0.12438928, y: 0.21, z: 0.240366}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 4203807038650747018}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -180}
---- !u!33 &5097975736192684844
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7835676404755624233}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &1990058924691321723
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7835676404755624233}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 61c5d99377327ed47aa3016353ee84ca, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7203812611154305031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7835676404755624233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6db81b71ff701fe4f87336be1b5c47fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpritePosition
-  playerInput: {fileID: 1451507666885551369}
-  player: {fileID: 9161073132628622385}
-  rotationRight: 180
-  rotationLeft: 0
-  rotationUp: 90
 --- !u!1 &9161073132628622385
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,7 +259,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4734677327996312551}
   - {fileID: 6906093466086425434}
   - {fileID: 929999573626763497}
   m_Father: {fileID: 0}
@@ -494,7 +376,7 @@ MonoBehaviour:
     m_ActionName: 'MainPlayer/Rewind[/XInputControllerWindows/buttonNorth,/Keyboard/r]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1182052141962529433}
         m_TargetAssemblyTypeName: PickUpObject, Assembly-CSharp
         m_MethodName: ToggleGrab
         m_Mode: 0
