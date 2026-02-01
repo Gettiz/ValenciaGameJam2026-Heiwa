@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6117b8d50e0bc64ab52c8d2f6892f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FollowCameraPlayer
-  target: {fileID: 0}
+  target: {fileID: 4203807038650747018}
   leadDistance: 0.5
   centerDelay: 0.2
   turnSmoothTime: 0.05
@@ -207,8 +207,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1406cebad6016a341aec7c1e8019036a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColliderGrabPosition
-  playerInput: {fileID: 0}
-  player: {fileID: 0}
+  playerInput: {fileID: 1451507666885551369}
+  player: {fileID: 9161073132628622385}
   sideDistance: 1.5
   smoothSpeed: 10
 --- !u!114 &1182052141962529433
@@ -674,6 +674,7 @@ MonoBehaviour:
   animator: {fileID: 3381987042568971110}
   movingBool: isMoving
   jumpBool: isJumping
+  facingRightBool: isFacingRight
   footstepSource: {fileID: 5609067653504321591}
   footstepClip: {fileID: 8300000, guid: 70c28fd1700293244af09b5902a5eac3, type: 3}
   stepRate: 13.331
@@ -882,7 +883,7 @@ MonoBehaviour:
   meleeMask:
     serializedVersion: 2
     m_Bits: 512
-  animator: {fileID: 0}
+  animator: {fileID: 3381987042568971110}
   attackTrigger: attack
 --- !u!95 &3381987042568971110
 Animator:
@@ -955,7 +956,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -1188561777, guid: 71aee835a48cfd542b2f6385b21b572a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 91fe030f2e2260743b4b432d4a2122be, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
