@@ -3,6 +3,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
+    [Header("Animator")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string movingBool = "isMoving";
+    [SerializeField] private string jumpBool = "isJumping";
+
     [Header("Audio")]
     public AudioSource footstepSource;
     public AudioClip footstepClip;
@@ -79,6 +84,7 @@ public class PlayerMove : MonoBehaviour
             MovementBehavior(grounded);
             JumpBehavior(grounded);
             FallSpeed(grounded);
+            UpdateAnimator(grounded);
         }
     }
 
@@ -177,6 +183,7 @@ public class PlayerMove : MonoBehaviour
             if (grounded && rb.linearVelocity.y <= 0.1f && jumpTimer > 0.1f)
             {
                 isJumping = false;
+                SetAnimatorBool(jumpBool, false);
             }
         }
     }
@@ -261,12 +268,37 @@ public class PlayerMove : MonoBehaviour
                 isJumping = true;
                 jumpTimer = 0;
                 jumpButtonHold = true;
+                SetAnimatorBool(jumpBool, true);
             }
 
             if (context.canceled)
             {
                 jumpButtonHold = false;
             }
+        }
+    }
+
+    private void UpdateAnimator(bool grounded)
+    {
+        if (animator == null)
+        {
+            return;
+        }
+
+        bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
+        SetAnimatorBool(movingBool, isMoveInputActive && grounded);
+
+        if (!grounded)
+        {
+            SetAnimatorBool(jumpBool, true);
+        }
+    }
+
+    private void SetAnimatorBool(string param, bool value)
+    {
+        if (animator != null && !string.IsNullOrEmpty(param))
+        {
+            animator.SetBool(param, value);
         }
     }
 }
