@@ -3,6 +3,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
+    [Header("Audio")]
+    public AudioSource footstepSource;
+    public AudioClip footstepClip;
+    public float stepRate = 0.4f;
+    private float stepTimer;
+    
     [Header("InteractableLayer")]
     public LayerMask InteractableObjectLayer;
     private Transform activePlatform;
@@ -81,6 +87,29 @@ public class PlayerMove : MonoBehaviour
         Vector3 moveDir = new Vector3(rawInput, 0, 0);
         Vector3 moveOnPlane = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized;
         bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
+        
+        if (isGrounded && isMoveInputActive)
+        {
+            stepTimer -= Time.fixedDeltaTime;
+            if (stepTimer <= 0)
+            {
+                footstepSource.PlayOneShot(footstepClip); 
+                stepTimer = stepRate;
+            }
+        }
+        else
+        {
+            if (footstepSource.isPlaying && isGrounded)
+            {
+                footstepSource.Stop();
+            }
+            stepTimer = 0; 
+        }
+
+        if (!isGrounded)
+        {
+            footstepSource.Stop();
+        }
 
         float currentMaxSpeed = isGrounded ? maxSpeed : maxSpeedInAir;
         float currentAccel = isGrounded ? acceleration : acceleration * airControl;
