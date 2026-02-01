@@ -851,9 +851,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlideshowController
   displayImage: {fileID: 674620988}
   slides:
-  - sprite: {fileID: -2127724507, guid: c05ea1e6c3c71ff4580e610f221e6078, type: 3}
+  - sprite: {fileID: 1999297031, guid: c02ac2000e3cb8c40b0a36aa442c3066, type: 3}
     activateOnSlide: []
-  - sprite: {fileID: 1243795274, guid: ebc18cf69d7c88c41a4e18b2fb976426, type: 3}
+  - sprite: {fileID: -1375981627, guid: 4f7705d1d1cf7f4498315762b1d8e610, type: 3}
+    activateOnSlide: []
+  - sprite: {fileID: -348520134, guid: 4e3edfe556cc58341a3f53386e149ee3, type: 3}
+    activateOnSlide: []
+  - sprite: {fileID: -1435848194, guid: 54aeb634d17f3b747b1340db652ab5af, type: 3}
+    activateOnSlide: []
+  - sprite: {fileID: -953850637, guid: 90ccb99d98c8a6b49876946f431d022a, type: 3}
+    activateOnSlide: []
+  - sprite: {fileID: 858600778, guid: 072561948d1a1f04f93a040525a933c4, type: 3}
     activateOnSlide: []
   slideDuration: 10
   autoPlay: 1
