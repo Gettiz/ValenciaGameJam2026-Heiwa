@@ -5,7 +5,7 @@ public class PauseBehavior : MonoBehaviour
 {
     public GameObject canvasHUD;
     public GameObject canvasPaused;
-    public static bool isPaused { get; private set; } = false;
+    public static bool isPaused = false;
 
     private void Start()
     {

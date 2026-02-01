@@ -853,11 +853,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlideshowController
   displayImage: {fileID: 674620988}
   slides:
-  - sprite: {fileID: 1943666937, guid: bae612468f3ff464eb5be26783c5f2fe, type: 3}
+  - sprite: {fileID: 762999010, guid: 29da278efba6251418598095b9df62e8, type: 3}
     activateOnSlide: []
-  - sprite: {fileID: 694008381, guid: b679cdcb4ac25014ea4736f43a481f10, type: 3}
+  - sprite: {fileID: 1351736728, guid: 99c81190666f7db4cbf8652156147eba, type: 3}
     activateOnSlide: []
-  - sprite: {fileID: 827093047, guid: abf4e6a853adbcc4881760e0bebbf3b7, type: 3}
+  - sprite: {fileID: -2127724507, guid: c05ea1e6c3c71ff4580e610f221e6078, type: 3}
+    activateOnSlide: []
+  - sprite: {fileID: 1020893225, guid: c9f754f9c195333469c01650234078e1, type: 3}
+    activateOnSlide: []
+  - sprite: {fileID: -974355706, guid: 7e17e8f6dea91d047822e0adb5f6d5c9, type: 3}
+    activateOnSlide: []
+  - sprite: {fileID: -2114608164, guid: a7c0de14bc0c2c44b911e9e48eabb457, type: 3}
+    activateOnSlide: []
+  - sprite: {fileID: 1243795274, guid: ebc18cf69d7c88c41a4e18b2fb976426, type: 3}
     activateOnSlide: []
   slideDuration: 10
   autoPlay: 1

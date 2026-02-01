@@ -7,6 +7,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private string movingBool = "isMoving";
     [SerializeField] private string jumpBool = "isJumping";
+    [SerializeField] private string facingRightBool = "isFacingRight";
 
     [Header("Audio")]
     public AudioSource footstepSource;
@@ -49,6 +50,7 @@ public class PlayerMove : MonoBehaviour
     private float jumpTimer;
     private bool isJumping;
     private bool jumpButtonHold;
+    private bool isFacingRight = true;
     private Vector3 groundNormal;
 
     private void Awake()
@@ -287,6 +289,20 @@ public class PlayerMove : MonoBehaviour
 
         bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
         SetAnimatorBool(movingBool, isMoveInputActive && grounded);
+
+        if (!string.IsNullOrEmpty(facingRightBool))
+        {
+            if (Mathf.Abs(rawInput) > 0.05f)
+            {
+                isFacingRight = rawInput > 0f;
+            }
+            else if (Mathf.Abs(rb.linearVelocity.x) > 0.01f)
+            {
+                isFacingRight = rb.linearVelocity.x > 0f;
+            }
+
+            animator.SetBool(facingRightBool, isFacingRight);
+        }
 
         if (!grounded)
         {
