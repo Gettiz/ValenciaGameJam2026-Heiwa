@@ -309,6 +309,17 @@
                 },
                 {
                     "name": "",
+                    "id": "57e87788-4421-45cf-998d-8dbfc1c39538",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1eebd03c-e32f-4f08-819e-11fea768f993",
                     "path": "<Keyboard>/shift",
                     "interactions": "",

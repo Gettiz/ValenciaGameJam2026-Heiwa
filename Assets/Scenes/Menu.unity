@@ -2935,7 +2935,7 @@ MonoBehaviour:
   levelSelectPanel: {fileID: 374341720}
   slideshowPanel: {fileID: 504486694}
   slideshowController: {fileID: 504486695}
-  fallbackContinueScene: ScenePlayerTest
+  fallbackContinueScene: ScenePlayerTestFix
 --- !u!4 &1141016890
 Transform:
   m_ObjectHideFlags: 0

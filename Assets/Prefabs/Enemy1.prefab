@@ -204,8 +204,8 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 128
-  boxWidth: 9.54
-  boxHeight: 1.93
+  boxWidth: 20.5
+  boxHeight: 5.35
   boxDepth: 3.06
   loseBoxExpand: 1
   detectOffset: {x: 0, y: 0, z: 0}
