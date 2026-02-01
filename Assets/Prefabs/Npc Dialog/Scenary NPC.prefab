@@ -147,38 +147,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 8556907087965700616}
     m_Modifications:
     - target: {fileID: 3934925580220964525, guid: cdaeba428ad4e9047b05f06e5182714b, type: 3}
-      propertyPath: translationsLabel.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3934925580220964525, guid: cdaeba428ad4e9047b05f06e5182714b, type: 3}
-      propertyPath: translationsLabel.Array.data[2].language
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3934925580220964525, guid: cdaeba428ad4e9047b05f06e5182714b, type: 3}
       propertyPath: translationsLabel.Array.data[0].translatedLabelText
       value: "Controles \nAWSD > Moverse  \nESPACIO > Saltar\nE > Recoger y Soltar\nR
         > Rebobinar Objetos\nF > Lanza Shurikens\nP > Pause"
       objectReference: {fileID: 0}
     - target: {fileID: 3934925580220964525, guid: cdaeba428ad4e9047b05f06e5182714b, type: 3}
       propertyPath: translationsLabel.Array.data[1].translatedLabelText
-      value: 'Controls
-
-        AWSD > Move
-
-        SPACE > Jump
-
-        E > Pick
-        Up and Drop
-
-        R > Rewind Objects
-
-        F > Throws Shurikens
-
-        P
-        > Pause'
-      objectReference: {fileID: 0}
-    - target: {fileID: 3934925580220964525, guid: cdaeba428ad4e9047b05f06e5182714b, type: 3}
-      propertyPath: translationsLabel.Array.data[2].translatedLabelText
       value: 'Controls
 
         AWSD > Move

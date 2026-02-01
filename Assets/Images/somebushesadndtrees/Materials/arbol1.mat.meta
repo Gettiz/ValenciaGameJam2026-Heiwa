@@ -1,12 +1,8 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Images/NPCs/NPCAnimations/Heiko Running.anim.meta
-guid: 2acf225d8fbd5a44fad7dd6a422d8d70
-========
 guid: af50a1dd47d06284599f7fbe89f9ee25
->>>>>>>> origin/TempBranchGettiz:Assets/Images/somebushesadndtrees/Materials/arbol1.mat.meta
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 7400000
+  mainObjectFileID: 2100000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
