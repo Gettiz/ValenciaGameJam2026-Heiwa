@@ -155,7 +155,6 @@ public class PlayerMove : MonoBehaviour
     private void Deceleration(float decelerationSpeed)
     {
         maxGlobalSpeed = Mathf.MoveTowards(maxGlobalSpeed, 0, decelerationSpeed * Time.fixedDeltaTime);
-
         Vector3 stopForce = new Vector3(-rb.linearVelocity.x * decelerationSpeed, 0, 0);
         ApplyForce(stopForce);
     }

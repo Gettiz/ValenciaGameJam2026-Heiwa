@@ -41,4 +41,14 @@ public class HealthPlayer : MonoBehaviour, IDamageable
     {
          Hit(damageAmount); 
     }
+
+    public void Heal(float amount)
+    {
+        if (amount <= 0f)
+        {
+            return;
+        }
+
+        currentHealth = math.clamp(currentHealth + amount, 0, maxHealth);
+    }
 }
