@@ -23,8 +23,6 @@ public class EnemySideScrollerAI : MonoBehaviour
     [SerializeField] private PatrolMode patrolMode = PatrolMode.BetweenPoints;
     [SerializeField] private Transform pointA;
     [SerializeField] private Transform pointB;
-    [SerializeField] private Collider pointACollider;
-    [SerializeField] private Collider pointBCollider;
     [SerializeField] private float pointContactDistance = 0.1f;
     [SerializeField] private float rangeLeft = 2f;
     [SerializeField] private float rangeRight = 2f;
@@ -207,23 +205,12 @@ public class EnemySideScrollerAI : MonoBehaviour
 
     private bool IsTouchingPoint(Transform targetPoint)
     {
-        Collider pointCollider = null;
-        if (targetPoint == pointA)
-        {
-            pointCollider = pointACollider != null ? pointACollider : pointA.GetComponent<Collider>();
-        }
-        else if (targetPoint == pointB)
-        {
-            pointCollider = pointBCollider != null ? pointBCollider : pointB.GetComponent<Collider>();
-        }
-
-        if (pointCollider == null)
+        if (targetPoint == null)
         {
             return false;
         }
 
-        Vector3 closest = pointCollider.ClosestPoint(transform.position);
-        float distance = Vector3.Distance(closest, transform.position);
+        float distance = Vector3.Distance(targetPoint.position, transform.position);
         return distance <= pointContactDistance;
     }
 

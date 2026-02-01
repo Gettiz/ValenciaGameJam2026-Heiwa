@@ -6,7 +6,8 @@ public class LanguageSelector : MonoBehaviour
     public enum Languages
     {
         English,
-        Spanish
+        Spanish,
+        Japanese
     }
 
     public static Languages CurrentLanguage = Languages.Spanish;
@@ -15,6 +16,7 @@ public class LanguageSelector : MonoBehaviour
 
     public void SetEnglish() => ChangeLanguage(Languages.English);
     public void SetSpanish() => ChangeLanguage(Languages.Spanish);
+    public void SetJapanese() => ChangeLanguage(Languages.Japanese);
 
     private void ChangeLanguage(Languages target)
     {

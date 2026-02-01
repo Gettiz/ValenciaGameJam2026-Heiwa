@@ -3,6 +3,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerMove : MonoBehaviour
 {
+    [Header("Animator")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string movingBool = "isMoving";
+    [SerializeField] private string jumpBool = "isJumping";
+    [SerializeField] private string facingRightBool = "isFacingRight";
+
     [Header("Audio")]
     public AudioSource footstepSource;
     public AudioClip footstepClip;
@@ -44,6 +50,7 @@ public class PlayerMove : MonoBehaviour
     private float jumpTimer;
     private bool isJumping;
     private bool jumpButtonHold;
+    private bool isFacingRight = true;
     private Vector3 groundNormal;
 
     private void Awake()
@@ -79,6 +86,7 @@ public class PlayerMove : MonoBehaviour
             MovementBehavior(grounded);
             JumpBehavior(grounded);
             FallSpeed(grounded);
+            UpdateAnimator(grounded);
         }
     }
 
@@ -177,6 +185,7 @@ public class PlayerMove : MonoBehaviour
             if (grounded && rb.linearVelocity.y <= 0.1f && jumpTimer > 0.1f)
             {
                 isJumping = false;
+                SetAnimatorBool(jumpBool, false);
             }
         }
     }
@@ -261,12 +270,51 @@ public class PlayerMove : MonoBehaviour
                 isJumping = true;
                 jumpTimer = 0;
                 jumpButtonHold = true;
+                SetAnimatorBool(jumpBool, true);
             }
 
             if (context.canceled)
             {
                 jumpButtonHold = false;
             }
+        }
+    }
+
+    private void UpdateAnimator(bool grounded)
+    {
+        if (animator == null)
+        {
+            return;
+        }
+
+        bool isMoveInputActive = Mathf.Abs(rawInput) > 0.05f;
+        SetAnimatorBool(movingBool, isMoveInputActive && grounded);
+
+        if (!string.IsNullOrEmpty(facingRightBool))
+        {
+            if (Mathf.Abs(rawInput) > 0.05f)
+            {
+                isFacingRight = rawInput > 0f;
+            }
+            else if (Mathf.Abs(rb.linearVelocity.x) > 0.01f)
+            {
+                isFacingRight = rb.linearVelocity.x > 0f;
+            }
+
+            animator.SetBool(facingRightBool, isFacingRight);
+        }
+
+        if (!grounded)
+        {
+            SetAnimatorBool(jumpBool, true);
+        }
+    }
+
+    private void SetAnimatorBool(string param, bool value)
+    {
+        if (animator != null && !string.IsNullOrEmpty(param))
+        {
+            animator.SetBool(param, value);
         }
     }
 }

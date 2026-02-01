@@ -24,6 +24,10 @@ public class WeaponShooter : MonoBehaviour
     [SerializeField] private float meleeDamage = 20f;
     [SerializeField] private LayerMask meleeMask;
 
+    [Header("Animator")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string attackTrigger = "attack";
+
     private PlayerInput playerInput;
     private InputAction fireAction;
     private InputAction attackAction;
@@ -61,6 +65,7 @@ public class WeaponShooter : MonoBehaviour
         }
 
         nextFireTime = Time.time + fireCooldown;
+        TriggerAttackAnimation();
         Vector3 direction = GetShootDirection();
         Quaternion rotation = useMuzzleRotation
             ? muzzle.rotation
@@ -115,6 +120,8 @@ public class WeaponShooter : MonoBehaviour
             return;
         }
 
+        TriggerAttackAnimation();
+
         Collider[] hits = Physics.OverlapSphere(meleeOrigin.position, meleeRange, meleeMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < hits.Length; i++)
         {
@@ -123,6 +130,14 @@ public class WeaponShooter : MonoBehaviour
             {
                 damageable.Damage(meleeDamage);
             }
+        }
+    }
+
+    private void TriggerAttackAnimation()
+    {
+        if (animator != null && !string.IsNullOrEmpty(attackTrigger))
+        {
+            animator.SetTrigger(attackTrigger);
         }
     }
 
