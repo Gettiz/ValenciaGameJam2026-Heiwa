@@ -6,7 +6,7 @@ public class LevelSelectController : MonoBehaviour
 {
     [Header("Levels")]
     [SerializeField] private string[] levelSceneNames;
-    [SerializeField] private int maxUnlockedLevel = 1;
+    private int maxUnlockedLevel = 1;
 
     [Header("Locked Message")]
     [SerializeField] private GameObject lockedMessagePanel;

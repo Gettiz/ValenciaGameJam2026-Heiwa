@@ -6,6 +6,7 @@ public class MainMenuController : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject creditsPanel;
+    [SerializeField] private GameObject languageSelectPanel;
     [SerializeField] private GameObject levelSelectPanel;
     [SerializeField] private GameObject slideshowPanel;
 
@@ -20,11 +21,11 @@ public class MainMenuController : MonoBehaviour
 
     public void OnStartPressed()
     {
-        if (SaveSystem.HasSave())
+        /*if (SaveSystem.HasSave())
         {
             ShowPanel(levelSelectPanel);
             return;
-        }
+        }*/
 
         ShowPanel(slideshowPanel);
         if (slideshowController != null)
@@ -60,14 +61,20 @@ public class MainMenuController : MonoBehaviour
         Application.Quit();
     }
 
-    public void OnSlideshowFinished()
+    public void OnSlideShowFinished()
     {
-        ShowPanel(levelSelectPanel);
+        SceneManager.LoadScene(fallbackContinueScene);
+    }
+
+    public void OnLanguagePressed()
+    {
+        ShowPanel(languageSelectPanel);
     }
 
     private void ShowPanel(GameObject panel)
     {
         if (menuPanel != null) menuPanel.SetActive(panel == menuPanel);
+        if (languageSelectPanel != null) languageSelectPanel.SetActive(panel == languageSelectPanel);
         if (creditsPanel != null) creditsPanel.SetActive(panel == creditsPanel);
         if (levelSelectPanel != null) levelSelectPanel.SetActive(panel == levelSelectPanel);
         if (slideshowPanel != null) slideshowPanel.SetActive(panel == slideshowPanel);
