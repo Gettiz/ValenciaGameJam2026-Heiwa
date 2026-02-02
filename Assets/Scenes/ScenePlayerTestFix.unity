@@ -40238,10 +40238,10 @@ PrefabInstance:
 
         AWSD > Move
 
-        SPACE > Jump
+        SPACEBAR  > Jump
 
-        E > Pick
-        Up and Drop
+        E
+        > Pick Up and Drop
 
         R > Rewind Objects
 
@@ -40249,6 +40249,13 @@ PrefabInstance:
 
         P/ESC
         > Pause'
+      objectReference: {fileID: 0}
+    - target: {fileID: 596433342303508704, guid: 614abf39683de834ea845c527771973b, type: 3}
+      propertyPath: translationsLabel.Array.data[2].translatedLabelText
+      value: "\u64CD\u4F5C\u65B9\u6CD5\uFF1A\r\nAWSD > \u79FB\u52D5\r\nSPACEBAR >
+        \u30B8\u30E3\u30F3\u30D7\r\nE > \u62FE\u3063\u3066\u843D\u3068\u3059\r\nR
+        > \u30A2\u30A4\u30C6\u30E0\u3092\u5DFB\u304D\u623B\u3059\r\nF > \u624B\u88CF\u5263\u3092\u6295\u3052\u308B\r\nP/Esc
+        > \u4E00\u6642\u505C\u6B62"
       objectReference: {fileID: 0}
     - target: {fileID: 1301107326074567200, guid: 614abf39683de834ea845c527771973b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
