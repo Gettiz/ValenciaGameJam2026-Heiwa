@@ -1,5 +1,17 @@
 Guía rápida (últimos añadidos)
 
+## Índice
+- [1) Guardado simple (PlayerPrefs)](#1-guardado-simple-playerprefs)
+- [2) Flujo menú → historia → selector](#2-flujo-menú--historia--selector)
+- [3) Diapositivas de historia](#3-diapositivas-de-historia)
+- [4) Selector de niveles y bloqueo](#4-selector-de-niveles-y-bloqueo)
+- [5) Mostrar paneles con botones](#5-mostrar-paneles-con-botones)
+- [6) Audio (música + SFX)](#6-audio-música--sfx)
+- [7) Botón de idioma (solo panel)](#7-botón-de-idioma-solo-panel)
+- [8) Enemigo solo disparo (rango y gizmos)](#8-enemigo-solo-disparo-rango-y-gizmos)
+- [9) Curación con objetos (Health Pickup)](#9-curación-con-objetos-health-pickup)
+- [10) HUD y pausa (reinicio, salir y volver al menú)](#10-hud-y-pausa-reinicio-salir-y-volver-al-menú)
+
 ## 1) Guardado simple (PlayerPrefs)
 Archivo: [Assets/Scripts/UI/SaveSystem.cs](Assets/Scripts/UI/SaveSystem.cs)
 
@@ -145,4 +157,21 @@ Archivos:
 - Ajusta `healAmount` (y opcional `pickupSfx`).
 
 **Resultado:** al tocarlo, el jugador se cura y el objeto se destruye.
+
+---
+
+## 10) HUD y pausa (reinicio, salir y volver al menú)
+Archivo: [Assets/Scripts/ScriptsGettiz/CanvasScripts/PauseBehavior.cs](Assets/Scripts/ScriptsGettiz/CanvasScripts/PauseBehavior.cs)
+
+**Funciones disponibles para botones:**
+- `SwitchPause()` → pausa/reanuda.
+- `ReturnToMainMenu()` → vuelve a la escena de menú.
+- `RestartScene()` → reinicia la escena actual.
+- `QuitGame()` → cierra la aplicación.
+
+**Asignación de escena del menú:**
+- En el Inspector puedes asignar la escena directamente en `mainMenuScene` (solo Editor). El nombre se sincroniza automáticamente.
+
+**Notas:**
+- `HealthPlayer` ya no reinicia ni cierra el juego; ahora lo gestiona el HUD.
 

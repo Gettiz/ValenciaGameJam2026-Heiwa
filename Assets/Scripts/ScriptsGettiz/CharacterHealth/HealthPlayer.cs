@@ -1,7 +1,6 @@
 using System;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -30,25 +29,12 @@ public class HealthPlayer : MonoBehaviour, IDamageable
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            RestartScene();
+            PauseBehavior.RestartSceneStatic();
         }
         else
         {
             currentHealth = math.clamp(currentHealth, 0, maxHealth);
         }
-    }
-
-    public void RestartScene()
-    {
-        PauseBehavior.isPaused = false;
-        Time.timeScale = 1f;
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex);
-    }
-    
-    public void QuitGame()
-    {
-        Application.Quit();
     }
 
     public void Damage(float damageAmount)
