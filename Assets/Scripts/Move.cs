@@ -105,4 +105,12 @@ public class Move : MonoBehaviour
         if (context.canceled)
             isJumping = false;
     }
+    
+    public void Fly(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            
+        }
+    }
 }
