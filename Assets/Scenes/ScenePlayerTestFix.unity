@@ -27495,14 +27495,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6137210393404651166, guid: 76c258834712a53439e7091e492c8428, type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 1406080818}
-    - target: {fileID: 6137210393404651166, guid: 76c258834712a53439e7091e492c8428, type: 3}
-      propertyPath: boxHeight
-      value: 18.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6137210393404651166, guid: 76c258834712a53439e7091e492c8428, type: 3}
       propertyPath: bulletPool
       value: 
       objectReference: {fileID: 332968759}
