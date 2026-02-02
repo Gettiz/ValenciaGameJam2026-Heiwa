@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6423811353802686989}
   - component: {fileID: 6353754752596073029}
   m_Layer: 0
-  m_Name: CameraTarget (1)
+  m_Name: CameraTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 7537884774891707545}
   - component: {fileID: 1182052141962529433}
   m_Layer: 0
-  m_Name: GrabbedObject (1)
+  m_Name: GrabbedObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 3381987042568971110}
   - component: {fileID: 5269859733428869163}
   m_Layer: 7
-  m_Name: Player (1)
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
