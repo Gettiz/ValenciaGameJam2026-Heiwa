@@ -6090,7 +6090,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9161073132628622385, guid: 31d28a9c5da20bf43bcbacd0f0f0ee43, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1406080819}
   m_SourcePrefab: {fileID: 100100000, guid: 31d28a9c5da20bf43bcbacd0f0f0ee43, type: 3}
 --- !u!1 &381483385
 GameObject:
@@ -26578,6 +26581,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4203807038650747018, guid: 31d28a9c5da20bf43bcbacd0f0f0ee43, type: 3}
   m_PrefabInstance: {fileID: 368546832}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1406080819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406080804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 063ae5e86ad9c184198e1cc7c786e71d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FrameRateLimit
 --- !u!1 &1409508486
 GameObject:
   m_ObjectHideFlags: 0
